@@ -18,13 +18,14 @@ foundPlate=False
 
 class plateRecognizer():
     def __init__(self):
-        self.cap = cv2.VideoCapture(0)
-        # self.ret, self.frame = self.cap.read()
+        print('Dummy text')
+        self.cap = cv2.VideoCapture('./output6.avi')
+        self.ret, self.frame = self.cap.read()
 
     def recognizer(self,img): 
         threshold_img = self.preprocess(img)
         contours= self.extract_contours(threshold_img)
-        cv2.imshow('test1',img)
+        # cv2.imshow('test1',img)
         callback = self.cleanAndRead(img,contours)
         if callback:
             NumberPlate,numImage = callback
@@ -37,13 +38,13 @@ class plateRecognizer():
         while(True):
             self.ret, self.frame = self.cap.read()
             NumberPlate = self.recognizer(self.frame)
-            # local = cv2.VideoCapture(0)
-            # ret, frame = local.read()
-            # cv2.imshow('testq',frame)
-            print(self.frame)
-            cv2.imshow('test',self.frame)
+            cv2.imshow('frame',self.frame)
             if NumberPlate:
                 return NumberPlate
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+        return 0
+        
 
     def get_frame(self):
         self.frames = open("./stream.jpg", 'w+')
