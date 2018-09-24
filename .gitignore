@@ -1,2 +1,3 @@
 ./output*
 recognized.jpg
+./__pycache__
