@@ -22,9 +22,12 @@ class plateRecognizer():
         self.cap = cv2.VideoCapture('./output6.avi')
         self.ret, self.frame = self.cap.read()
 
+
+
     def recognizer(self,img): 
         threshold_img = self.preprocess(img)
         contours= self.extract_contours(threshold_img)
+        cv2.imwrite("./stream.jpg", img)
         # cv2.imshow('test1',img)
         callback = self.cleanAndRead(img,contours)
         if callback:
@@ -38,7 +41,7 @@ class plateRecognizer():
         while(True):
             self.ret, self.frame = self.cap.read()
             NumberPlate = self.recognizer(self.frame)
-            cv2.imshow('frame',self.frame)
+            # cv2.imshow('frame',self.frame)
             if NumberPlate:
                 return NumberPlate
             if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -47,11 +50,17 @@ class plateRecognizer():
         
 
     def get_frame(self):
-        self.frames = open("./stream.jpg", 'w+')
-        ret, img = self.cap.read()
-        if ret:	
-            cv2.imwrite("./stream.jpg", img)
-        return self.frames.read()
+        # self.frames = open("./stream.jpg", 'w+')
+        # ret, img = self.cap.read()
+        # if ret:	
+        #     cv2.imwrite("./stream.jpg", img)
+        # return self.frames.read()
+        self.ret, self.frame = self.cap.read()
+        NumberPlate = self.recognizer(self.frame)
+        if NumberPlate:
+            return NumberPlate
+        ret, jpeg = cv2.imencode('.jpg',self.frame)
+        return jpeg.tobytes()
 
     def preprocess(self,img):
         imgBlurred = cv2.GaussianBlur(img, (5,5), 0)
